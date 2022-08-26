@@ -32,8 +32,8 @@ Handling various kind of data will disturb our main objective. However, if there
 
 Before proceeding, we present final rendered images from out project.
 
-<img src="./image_README/final_gif/chair.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-<img src="./image_README/final_gif/ship.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<img src="./image_README/final_gif/chair.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
+<img src="./image_README/final_gif/ship.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
 <img src="./image_README/final_gif/mic.gif" height="250" width="250">
 
 Images are rendered at 30 degrees latitude.
