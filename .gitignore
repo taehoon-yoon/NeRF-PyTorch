@@ -1,0 +1,9 @@
+.idea/
+.ipynb*/
+__pycache__/
+fine_image/
+models/
+nerf_synthetic/
+runs/
+rendered_Image/
+Untitled*
