@@ -2,6 +2,7 @@
 .ipynb*/
 __pycache__/
 fine_image/
+train_results_excel/
 models/pretrained*
 nerf_synthetic/
 runs/
