@@ -111,5 +111,13 @@ After running ```Inference.py``` you will see prompt like the image below. There
 
 ### Use Pretrained model right away!
 
-
+- Pretrained models are provided in folder ```./models/```. Currently 7 objects are trained using NeRF, ```chair, drums, hotdog, lego, materials, mic, ship``` as you can see in the ```models/``` folder. 
+- ```ship_half``` is the model trained with half resolution(400X400 size) of the images of ship. For the ```ship_half``` model, you have to change the ```half_res``` parameter which is located inside ```Config.py``` to ```True```, [link](https://github.com/sillsill777/NeRF-PyTorch/blob/a9dd36186ee6f13b465c8a0f2a8248d70419d960/Config.py#L15) is here.
+- Go to [Inference section](#inference) and follow the steps. Only **difference** is that at **step (2)**, when entering the experiment name, you have to input one of the following, ```chair, drums, hotdog, lego, materials, mic, ship, ship_half``` and at **step (6)**, just input **0** to the prompt.
  
+ ## Configuere
+ 
+- - -
+
+# Additionals
+
