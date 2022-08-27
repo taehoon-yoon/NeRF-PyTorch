@@ -19,7 +19,7 @@ Nc = 64
 Nf = 128
 
 N_rand = 1024
-chunk = 1024 * 32
+chunk = 1024 * 16
 networkChunk = 1024 * 64
 totalSteps = 500000  # Equivalent to 5000 epochs, **1 epoch= 100 steps**
 perturb = True

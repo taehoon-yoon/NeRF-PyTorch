@@ -12,6 +12,7 @@ from Model import NeRF
 
 
 def Infer(renderSize, renderAngle, dataSetPath, modelPath, DEVICE):
+    print('Loading Data...')
     _, _, render_poses, hwf, _ = load_blender_data(dataSetPath, half_res=half_res, renderSize=renderSize,
                                                    renderAngle=renderAngle)
     render_poses = render_poses.to(DEVICE)
