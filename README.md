@@ -39,3 +39,47 @@ Before proceeding, we present final rendered images from out project.
 Images are rendered at 30 degrees latitude.
 
 If you want to see the results of other object, go to ```./image_README/final_gif/``` folder.
+
+- - -
+
+## Training
+
+### Run ```Train.py```.
+
+After running ```Train.py``` you will see prompt like the image below. There are total three inputs.
+
+<img src="./image_README/train1.png">
+
+(1) Enter the data set name you want to train. 
+  - If you look at the ```nerf_synthetic``` folder which you've downloaded, you will find that there are 8 data sets available. Namely, ```chair, drums, ficus, hotdog, lego, materials, mic, ship```. So the available input should be one of those 8 dataset name.
+
+(2) Enter the experiment name. 
+  - You can input any experiment name you want. This name will be used to generate subfolders to store images, models and log(tensorboard).
+
+(3) Enter the test image number(0~199). 
+  - What this number mean is that, if you look at the ```test``` folder for each of the data set folder,(ex:```./nerf_synthetic/lego/test/```) you can see there exist images like ```r_0.png, r_1.png, r_2.png ... r_199.png```. And the number you input will be the test image to compare with the image rendered during training by NeRF. So if you input number 55, ```r_55.png``` will be selected to be the test image. And during training, NeRF will use the information about camera's extrinsic(camera's position, camera's direction) values of ```r_55.png``` and render novel view image. And this rendered image will be saved under the folder ```./fine_Image/exp_name/``` and PSNR will be calculated with ```r_55.png```. That PSNR value will be stored as ```PSNR test``` in tensorboard.
+  - You can use any number between 0 to 199, for chair and lego dataset, we recommend 55 because ```r_0.png```'s camera is facing back of the object.  
+  
+ :heavy_check_mark: If you are using multiple GPU's you will see additional prompt before (1) which is, ```please enter number (ex) 0 for cuda:0, 1 for cuda:1): ``` Enter the number you want to train with. If you want to run multiple experiments in parallel, use different gpu number for each experiment. For example, use ```cuda:0``` for training NeRF with ```lego``` data and use ```cuda:1``` for training NeRF with ```ship``` data.
+  - If you are using ```PyCharm``` and want to run multiple excution, go to toolbar ```Run->Edit Configurations...``` and check the ```Allow parallel run``` and press Apply button. Consult below image.
+  
+<img src="./image_README/pycharm.png">
+
+Running ```Train.py``` you will see that 3 folders are generated inside the main project directory. 
+
+1. ```fine_image/exp_name/```
+  - Rendered novel view image by NeRF is stored. Name of the image consists two informations. First five digit number indicates the Epoch when this image were rendered. And the second number after undersocre is the PSNR between rendered image and the test image you selected in (3).
+
+2. ```models/exp_name/```
+  - Models are saved in this directory. With the format ```Epoch_xxx.tar```
+
+3. ```runs/exp_name/```
+  - Run ```tensorboard --logdir PATH_TO_PROJECT_DIRECTORY/runs``` and you will see the logs during training at ```http://localhost:6006/```
+  
+- - -
+
+## Inference
+
+### Run ```Inference.py```
+
+  
