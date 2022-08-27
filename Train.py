@@ -20,7 +20,7 @@ def batchify(fn, netChunk=None):
         return fn_
 
 
-def render(rays, Coarse, Fine, posENC, dirENC, perturb_,DEVICE):
+def render(rays, Coarse, Fine, posENC, dirENC, perturb_, DEVICE):
     """
     Important:----------------------------------------------------------------------
     rays's shape must be (ray_size,6 or 9)
@@ -84,7 +84,7 @@ def render(rays, Coarse, Fine, posENC, dirENC, perturb_,DEVICE):
     return ret
 
 
-def render_full_image(render_pose, hw, K, Coarse, Fine, posENC, dirENC,DEVICE):
+def render_full_image(render_pose, hw, K, Coarse, Fine, posENC, dirENC, DEVICE):
     H, W = hw
     rays_o, rays_d = get_rays(H, W, K, render_pose, DEVICE)  # (H,W,3)
     rays_o = torch.reshape(rays_o, [-1, 3])
@@ -96,7 +96,7 @@ def render_full_image(render_pose, hw, K, Coarse, Fine, posENC, dirENC,DEVICE):
 
     all_ret = {}
     for i in tqdm(range(0, rays.shape[0], chunk), desc='Rendering Image', leave=False):
-        ret = render(rays[i:i + chunk], Coarse, Fine, posENC, dirENC, perturb_=False,DEVICE=DEVICE)
+        ret = render(rays[i:i + chunk], Coarse, Fine, posENC, dirENC, perturb_=False, DEVICE=DEVICE)
         for k in ret:
             if k not in all_ret:
                 all_ret[k] = []
@@ -105,7 +105,7 @@ def render_full_image(render_pose, hw, K, Coarse, Fine, posENC, dirENC,DEVICE):
     return all_ret
 
 
-def Train(dataSetPath,exp_name,test_img_idx):
+def Train(dataSetPath, exp_name, test_img_idx):
     print('Loading Data and Preprocessing...')
     image, poses, renderPoses, hwf, idx_split = load_blender_data(dataSetPath, half_res=half_res, renderSize=40,
                                                                   renderAngle=30.0)
@@ -196,7 +196,7 @@ def Train(dataSetPath,exp_name,test_img_idx):
         '''
             rays's shape= (N_rand,9) if use_viewDirection else (N_rand,6)
         '''
-        render_return = render(rays, Coarse, Fine, posENC, dirENC, perturb_=perturb,DEVICE=DEVICE)
+        render_return = render(rays, Coarse, Fine, posENC, dirENC, perturb_=perturb, DEVICE=DEVICE)
         pred = render_return['rgb_map']
 
         optimizer.zero_grad()
@@ -220,9 +220,10 @@ def Train(dataSetPath,exp_name,test_img_idx):
             with torch.no_grad():
                 Coarse.eval()
                 Fine.eval()
-                render_return = render_full_image(poses[idx_test[test_img_idx]], [H, W], K, Coarse, Fine, posENC, dirENC,DEVICE)
+                render_return = render_full_image(poses[idx_test[test_img_idx]], [H, W], K, Coarse, Fine, posENC,
+                                                  dirENC, DEVICE)
                 pred_image = torch.reshape(render_return['rgb_map'].cpu(), [H, W, 3])
-                target_image = torch.tensor(image[idx_test[55]])
+                target_image = torch.tensor(image[idx_test[test_img_idx]])
                 psnr = testPSNR(pred_image, target_image)
                 pred_image = (255. * pred_image).to(torch.uint8).numpy()
                 imageio.imsave(testImg_save_pth + '/{:05d}_{:.2f}.png'.format(int(step // 100), psnr), pred_image)
@@ -288,5 +289,5 @@ if __name__ == '__main__':
     os.makedirs(testImg_save_pth, exist_ok=True)
     os.makedirs(model_save_pth, exist_ok=True)
     print('Enter the test image index')
-    test_image_index=int(input('(Normally 0 will be fine, but for chair dataset I recommend 55): '))
-    Train(data_path,expName,test_image_index)
+    test_image_index = int(input('(Normally 0 will be fine, but for chair and lego dataset I recommend 55): '))
+    Train(data_path, expName, test_image_index)
