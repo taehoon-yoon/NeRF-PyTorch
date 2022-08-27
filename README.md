@@ -40,6 +40,8 @@ Images are rendered at 30 degrees latitude.
 
 If you want to see the results of other object, go to ```./image_README/final_gif/``` folder.
 
+### For those of you, who wants to use pretrained model to render images like above right away, go to following [section.](#use-pretrained-model-right-away)
+
 - - -
 
 ## Training
