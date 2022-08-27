@@ -40,6 +40,8 @@ Images are rendered at 30 degrees latitude.
 
 If you want to see the results of other object, go to ```./image_README/final_gif/``` folder.
 
+Other additional fascinating GIF can be found at [Additionals section](#additionals)
+
 ### For those of you, who wants to use pretrained model to render images like above right away, go to following [section.](#use-pretrained-model-right-away)
 
 - - -
@@ -115,9 +117,67 @@ After running ```Inference.py``` you will see prompt like the image below. There
 - ```ship_half``` is the model trained with half resolution(400X400 size) of the images of ship. For the ```ship_half``` model, you have to change the ```half_res``` parameter which is located inside ```Config.py``` to ```True```, [link](https://github.com/sillsill777/NeRF-PyTorch/blob/a9dd36186ee6f13b465c8a0f2a8248d70419d960/Config.py#L15) is here.
 - Go to [Inference section](#inference) and follow the steps. Only **difference** is that at **step (2)**, when entering the experiment name, you have to input one of the following, ```chair, drums, hotdog, lego, materials, mic, ship, ship_half``` and at **step (6)**, just input **0** to the prompt.
  
- ## Configuere
+ ## Configure
+ 
+ In this section, I will explain some parameters inside the ```Config.py```. We tried to follow same terminolory used in original implementation.
+ 
+ :pushpin: ```half_res``` : Whether to use half resoultion image to train NeRF and render image. Original data set image size is 800X800, setting ```True``` will train on image with 400X400 size.
+ 
+ :pushpin: ```chunk``` : The size of the ray which is rendered simultaneously. Is is only meaningful parameter where full image is rendered. For example, in ```Inference.py``` or the rendering one test image step in ```Train.py```. Let'a assume we are training with ```half_res=False```, then there will be total 800x800=640k rays to be rendered to make one full image. Since rendering 640k rays simultaneously requires enormous amount of memory(which is not possible with normal GPU devices) we have to chunk rays into small pieces such that to fit in GPU memory. So if the chunk size is 1000, then 1000 rays will be rendered simultaneously and there will be total 640 rendering step. So the chunk size is directly related to the speed of rendering one full image.
+ 
+ ### If you are getting OOM(out of memory) problem during ```Inference``` or rendering test image, try to reduce the size of ```chunk``` parameter. Normally, 1024*16 will be enough to fit in to your device.
+ 
+:pushpin:  ```networkChunk``` : The number of points to be passed to the NeRF's MLP model. So for example networkChunk is 10000, then 10000 points will be processed simultaneously in the MLP's forward function. Let's assume ```chunk``` is 1000 and sampling number of points per ray is 250. Then there will be total 1000*250=250,000 points. Since networkChunk is 10,000 the forward pass of MLP will be invoked 25 times in one train step.
+ 
+ ### If you are getting OOM problem during training, try to reduce the size of ```networkChunk```. If you follow default settings, normally, there should be no memory problem.
+ 
+ :pushpin: ```totalSteps``` : The number of total steps for training. Default value, following original implementation is 500,000. Unlike original implementation, we also use epoch notation. Since there are 100 images for each dataset, we define ```1 epoch = 100 steps```. So essentially, default epoch is 5,000.
+ 
+ :pushpin: ```render_one_test_image_epoch``` : The interval to render test image during training. About the test image rendering, go to [Training section](#training) step (3).
+ 
+ :pushpin: ```lPosition, lDirection``` : The number of positional encoding frequencies. Consult original paper section 5.1 Positional encoding. As in the paper, we set L=10 for position vector and L=4 for direction vector.
+ 
+ :pushpin: ```Nc, Nf``` : The number of sampling point along ray with Coarse network and Fine network. Consult original paper section 5.3 Implementation details and Appendix A. As in the paper, we set Nc=64, Nf=128.
+ 
+ :pushpin: ```N_rand``` : The number of rays randomly sampled from one training image. During training step, we randomly select ```N_rand``` rays from total 640k rays for training. This is why I mentioned ```chunk``` parameter is only meanigful where full image is rendered. In the original implementation, the author used ```N_rand``` = 1024 for ```nerf_synthetic``` data.
+ 
+ :pushpin: ```preCrop_iter, preCrop_rate``` : For the first ```preCrop_iter```, we just not randomly sample ```N_rand``` rays, rather we randomly sample rays inside the bounded region where width and height are ```preCrop_rate X (width, height of original image)``` with center aligned. For example, assume ```preCrop_iter=5000, preCrop_rate=0.5``` than for the first 5000 steps, it randomy samples ```N_rand``` rays from the region with (400X400 size)bounded box, center aligned.  
+ 
+ :pushpin: ```lr_decay``` : Exponential learning rate decay in 1000 steps.
+ 
+ :pushpin: ```perturb``` : Whether to add randomness in sampling points for Coarse network and in inverse tranform sampling, which is the technique used to sample points for Fine network.
+ 
+ :pushpin: ```lindsip``` : This is related to sampling schema. This parameter is better explained in image than word.
+ <img src="./image_README/lindisp.png">
+ Near is set to 2 and Far is set to 6. As you can see, setting ```lindisp=True``` will sample more points near the Near plane. While ```lindisp=False``` will evenly sample point between near and far plane. Default is False.
  
 - - -
 
 # Additionals
+
+## Training Progress
+
+We present some Gif which is composed of NeRF generated test images, during training. Test images are rendered every 50 epochs. You can see the improvment of image quailty as the train progress.
+
+<img src="./image_README/progress_image/lego_training.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
+<img src="./image_README/progress_image/ship_training.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
+<img src="./image_README/progress_image/chair_training.gif" height="250" width="250">
+
+For the other objects, go to ```./image_README/progress_image/```
+
+## Various Latitude Angle
+
+<img src="./image_README/final_gif/lego_0angle.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
+<img src="./image_README/final_gif/lego.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
+<img src="./image_README/final_gif/lego_60angle.gif" height="250" width="250">
+
+(Left: 0 degree latitude, Middle: 30 degrees latitude, Right: 60 degrees latitude)
+
+## Additional GIF
+
+<img src="./image_README/final_gif/drums.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
+<img src="./image_README/final_gif/hotdog.gif" height="250" width="250"> &nbsp; &nbsp; &nbsp;
+<img src="./image_README/final_gif/materials.gif" height="250" width="250">
+
+(Rendered at 30 degrees latitude)
 
