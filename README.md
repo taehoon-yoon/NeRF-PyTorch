@@ -96,4 +96,18 @@ After running ```Inference.py``` you will see prompt like the image below. There
   - Enter angle between (0~90). Latitude angle in **Result** section is 30 degree.
   
 (4) Enter rendering size.
-  - This is the number of total images to render. It will evenly seperate the longitude angle(0~360) with a given number. It takes about 1 minute to render one image in ```GTX1080Ti```. The program automatically finds fps to generate GIF with total 5 seconds to fully rotate in space. So for example, if the rendering size is 60, then the fps will be 5fps. The GIF in **Result** section was rendered with **300 rendering size**. More than 300 rendering size will generate GIF which takes more than 5 seconds to fully rotate in space, since the maximum fps is fixed to 60fps.
+  - This is the number of total images to render. It will evenly seperate the longitude angle(0~360) with a given number. It takes about 1 minute to render one image in ```GTX1080Ti```. The program automatically finds fps to generate GIF with total 5 seconds to fully rotate in space. So for example, if the rendering size is 60, then the fps will be 5fps. The GIF in **Result** section was rendered with **300 rendering size**. More than 300 rendering size will generate GIF which takes more than 5 seconds to fully rotate in space, since the maximum fps is fixed to 60fps. Those of you, who wants more than 60 fps go to [code](https://github.com/sillsill777/NeRF-PyTorch/blob/4847d7381c7445cb7908c7ffad1652f2a4fe5074/Inference.py#L79) and change the fps.
+  
+(5) Enter file name to save rendered images.
+  - Rendered images will be saved under ```rendered_Image/FILE_NAME_YOU_ENTERED/```. After the program ends, the ```final.gif``` is the GIF made with the rendered images.
+  
+(6) Enter the model name to render image.
+  - After training there will be lots of saved model in ```models/exp_name/```. You can choose the specific model to render image. For example if you want to render images with the saved model parameter ```Epoch_100.tar```, enter ```Epoch_100``` in prompt. If you just want to use the model with the best ```PSNR_test``` achieved, enter **0**
+  - If you see the blue box, it means that the model is successfully loaded.
+  
+:heavy_check_mark: As in the **Training** section, if you are using mutiple gpus, you can facilitate it to render images with different type of object or differnet latitude angle in parallel. For the detail, consult the above **Training** section.
+
+### Use Pretrained model right away!
+
+
+ 
