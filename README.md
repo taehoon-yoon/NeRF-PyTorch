@@ -82,4 +82,18 @@ Running ```Train.py``` you will see that 3 folders are generated inside the main
 
 ### Run ```Inference.py```
 
+After running ```Inference.py``` you will see prompt like the image below. There are total six inputs.
+
+<img src="./image_README/inference.png">
+
+(1) Enter the data set name you want to render.
+  - As in the training section, input must be one of ```chair, drums, ficus, hotdog, lego, materials, mic, ship``` which you've trained NeRF with.
+ 
+(2) Enter the experiment name.
+  - This name should be the same name which you used in training section. Since it will find the saved model in the folder ```./models/exp_name/```
   
+(3) Enter Latitude angle you want to render.
+  - Enter angle between (0~90). Latitude angle in **Result** section is 30 degree.
+  
+(4) Enter rendering size.
+  - This is the number of total images to render. It will evenly seperate the longitude angle(0~360) with a given number. It takes about 1 minute to render one image in ```GTX1080Ti```. The program automatically finds fps to generate GIF with total 5 seconds to fully rotate in space. So for example, if the rendering size is 60, then the fps will be 5fps. The GIF in **Result** section was rendered with **300 rendering size**. More than 300 rendering size will generate GIF which takes more than 5 seconds to fully rotate in space, since the maximum fps is fixed to 60fps.
